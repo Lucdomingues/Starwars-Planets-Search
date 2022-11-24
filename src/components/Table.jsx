@@ -4,6 +4,7 @@ import MyContext from '../context/myContext';
 function Table() {
   const context = useContext(MyContext);
   const [apiResults, setApiResults] = useState([]);
+  const [inputName, setInputName] = useState('');
 
   useEffect(() => {
     async function responseApi() {
@@ -13,12 +14,25 @@ function Table() {
     responseApi();
   }, [context.apiResponse]);
 
+  const resultSearch = apiResults
+    .filter((element) => element.name.includes(inputName));
+
   return (
     <div>
+      <form>
+        <input
+          type="text"
+          name="filter-name"
+          id="filter-name"
+          data-testid="name-filter"
+          placeholder="buscar"
+          onChange={ ({ target }) => setInputName(target.value) }
+        />
+      </form>
       <table>
         <thead>
           <tr>
-            <th>name</th>
+            <th>Name</th>
             <th>Rotation Period</th>
             <th>Orbital Period</th>
             <th>Diameter</th>
@@ -34,7 +48,7 @@ function Table() {
           </tr>
         </thead>
         <tbody>
-          {apiResults.map((api) => (
+          {resultSearch.map((api) => (
             <tr key={ Math.random() }>
               <td>
                 {api.name}
