@@ -1,110 +1,62 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect } from 'react';
 import MyContext from '../context/myContext';
+import NameFilter from './NameFilter';
+import NumberFilter from './NumberFilter';
 
 function Table() {
-  const context = useContext(MyContext);
-  const [apiResults, setApiResults] = useState([]);
-  const [inputName, setInputName] = useState('');
-  const [genericFilter, setGenericFilter] = useState([]);
-  const [colummn] = useState([
-    'population', 'orbital_period', 'diameter', 'rotation_period', 'surface_water',
-  ]);
-  const [selected, setSelected] = useState({
-    column: 'population',
-    condition: 'maior que',
-    value: 0,
-  });
+  const {
+    apiResults,
+    inputName,
+    genericFilter,
+    setGenericFilter,
+    filterArr,
+  } = useContext(MyContext);
+
+  useEffect(() => { setGenericFilter(apiResults); }, [apiResults]);
 
   useEffect(() => {
-    async function responseApi() {
-      const response = await context.apiResponse;
-      setApiResults(response);
-    }
-    responseApi();
-  }, [context.apiResponse]);
+    setGenericFilter(apiResults
+      .filter((element) => element.name.includes(inputName)));
+  }, [inputName]);
 
-  const resultSearchName = apiResults
-    .filter((element) => element.name.includes(inputName));
-
-  const resultsFilterNumber = () => {
-    const { column, condition, value } = selected;
-    const filterDad = resultSearchName.filter((element) => {
-      switch (condition) {
+  useEffect(() => {
+    let filterCondition = [];
+    filterArr.forEach((element) => {
+      switch (element.condition) {
       case 'maior que':
-        return Number(element[column]) > Number(value);
+        filterCondition = genericFilter
+          .filter((api) => +api[element.column] > +element.value);
+        break;
       case 'igual a':
-        return Number(value) === Number(element[column]);
+        filterCondition = genericFilter
+          .filter((api) => +api[element.column] === +element.value);
+        break;
       case 'menor que':
-        return Number(element[column]) < Number(value);
+        filterCondition = genericFilter
+          .filter((api) => +api[element.column] < +element.value);
+        break;
       default:
         return true;
       }
     });
-    return filterDad;
-  };
+    setGenericFilter(filterCondition);
+  }, [filterArr]);
 
-  const isFiltered = genericFilter.length > 0 ? genericFilter : resultSearchName;
-
-  console.log(isFiltered);
+  const isFiltered = genericFilter.length > 0 ? genericFilter : apiResults;
 
   return (
     <div>
       <form>
-        <input
-          type="text"
-          name="name"
-          id="name-filtered"
-          data-testid="name-filter"
-          placeholder="buscar"
-          value={ inputName }
-          onChange={ ({ target }) => setInputName(target.value) }
-        />
-        <select
-          name="column"
-          id="column-filtered"
-          data-testid="column-filter"
-          value={ selected.column }
-          onChange={ ({ target }) => setSelected({
-            ...selected, column: target.value,
-          }) }
-        >
-          {colummn.map((element) => (
-            <option key={ element } value={ element }>
-              {element}
-            </option>
-          ))}
-        </select>
-        <select
-          name="comparison"
-          id="comparison-filtered"
-          data-testid="comparison-filter"
-          value={ selected.condition }
-          onChange={ ({ target }) => setSelected({
-            ...selected, condition: target.value,
-          }) }
-        >
-          <option value="maior que">maior que</option>
-          <option value="menor que">menor que</option>
-          <option value="igual a">igual a</option>
-        </select>
-        <input
-          type="number"
-          name="value"
-          id="value-filtered"
-          data-testid="value-filter"
-          value={ selected.value }
-          onChange={ ({ target }) => setSelected({
-            ...selected, value: target.value,
-          }) }
-        />
-        <button
-          type="button"
-          data-testid="button-filter"
-          onClick={ () => setGenericFilter(resultsFilterNumber()) }
-        >
-          FILTRAR
-        </button>
+        <NameFilter />
+        <NumberFilter />
       </form>
+      <div>
+        {filterArr.map((element) => (
+          <p key={ Math.random() }>
+            {`${element.column} ${element.condition} ${element.value}`}
+          </p>
+        ))}
+      </div>
       <table>
         <thead>
           <tr>
