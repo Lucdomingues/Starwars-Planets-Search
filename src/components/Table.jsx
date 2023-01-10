@@ -53,6 +53,7 @@ function Table() {
       <div>
         {filterArr.map((element) => (
           <p key={ Math.random() }>
+            test
             {`${element.column} ${element.condition} ${element.value}`}
           </p>
         ))}
