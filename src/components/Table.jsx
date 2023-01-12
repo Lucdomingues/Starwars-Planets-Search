@@ -2,6 +2,7 @@ import React, { useContext, useEffect } from 'react';
 import MyContext from '../context/myContext';
 import NameFilter from './NameFilter';
 import NumberFilter from './NumberFilter';
+import RemoveFilters from './RemoveFilters';
 
 function Table() {
   const {
@@ -50,13 +51,7 @@ function Table() {
         <NameFilter />
         <NumberFilter />
       </form>
-      <div>
-        {filterArr.map((element) => (
-          <p key={ Math.random() }>
-            {`${element.column} ${element.condition} ${element.value}`}
-          </p>
-        ))}
-      </div>
+      <RemoveFilters />
       <table>
         <thead>
           <tr>
