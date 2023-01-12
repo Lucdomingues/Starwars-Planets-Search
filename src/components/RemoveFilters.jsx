@@ -5,21 +5,27 @@ function RemoveFilters() {
   const {
     filterArr,
     setFilterArr,
+    colummn,
+    setColummn,
+    setGenericFilter,
+    apiResults,
   } = useContext(MyContext);
 
   return (
     <div>
       <div>
-        {filterArr.map((element) => (
+        {filterArr.map((element, index) => (
           <p key={ Math.random() } data-testid="filter">
             {`${element.column} ${element.condition} ${element.value}`}
             <button
               type="button"
+              value={ element.column }
               onClick={ () => {
-                setFilterArr(
-                  filterArr.filter((elements) => elements.column !== element.column),
-                );
-                console.log(filterArr);
+                const cloneArr = [...filterArr];
+                cloneArr.splice(index, 1);
+                setColummn([...colummn, element.column]);
+                setFilterArr(cloneArr);
+                setGenericFilter(apiResults);
               } }
             >
               X

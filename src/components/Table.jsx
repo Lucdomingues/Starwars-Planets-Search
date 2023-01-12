@@ -22,20 +22,20 @@ function Table() {
 
   useEffect(() => {
     let filterCondition = [];
-    filterArr.forEach((element) => {
-      switch (element.condition) {
+    filterArr.map(({ column, condition, value }) => {
+      switch (condition) {
       case 'maior que':
         filterCondition = genericFilter
-          .filter((api) => +api[element.column] > +element.value);
-        break;
+          .filter((api) => +api[column] > +value);
+        return filterCondition;
       case 'igual a':
         filterCondition = genericFilter
-          .filter((api) => +api[element.column] === +element.value);
-        break;
+          .filter((api) => +api[column] === +value);
+        return filterCondition;
       case 'menor que':
         filterCondition = genericFilter
-          .filter((api) => +api[element.column] < +element.value);
-        break;
+          .filter((api) => +api[column] < +value);
+        return filterCondition;
       default:
         return true;
       }
