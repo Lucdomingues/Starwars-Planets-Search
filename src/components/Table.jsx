@@ -3,6 +3,7 @@ import MyContext from '../context/myContext';
 import NameFilter from './NameFilter';
 import NumberFilter from './NumberFilter';
 import RemoveFilters from './RemoveFilters';
+import OrderFilter from './OrderFilter';
 
 function Table() {
   const {
@@ -50,6 +51,7 @@ function Table() {
       <form>
         <NameFilter />
         <NumberFilter />
+        <OrderFilter />
       </form>
       <RemoveFilters />
       <table>
@@ -73,7 +75,7 @@ function Table() {
         <tbody>
           {isFiltered.map((api) => (
             <tr key={ Math.random() }>
-              <td>
+              <td data-testid="planet-name">
                 {api.name}
               </td>
               <td>
