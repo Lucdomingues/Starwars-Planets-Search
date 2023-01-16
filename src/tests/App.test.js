@@ -97,3 +97,33 @@ it('Verifica filter number menor que', async () => {
   const yavin = await screen.findByText('Yavin IV')
   expect(yavin).toBeInTheDocument()
 })
+
+it('Verifica a funcionalidade sort ASC', async () => {
+  render(<App />);
+
+  const column = screen.getByTestId('column-sort');
+  const condition = screen.getByTestId('column-sort-input-asc')
+  const buttonSort = screen.getByTestId('column-sort-button')
+
+  userEvent.selectOptions(column, ['population'])
+  userEvent.click(condition)
+  userEvent.click(buttonSort)
+
+  const yavin = await screen.findByText('Yavin IV')
+  expect(yavin).toBeInTheDocument()
+})
+
+it('Verifica a funcionalidade sort DESC', async () => {
+  render(<App />);
+
+  const column = screen.getByTestId('column-sort');
+  const condition = screen.getByTestId('column-sort-input-desc')
+  const buttonSort = screen.getByTestId('column-sort-button')
+
+  userEvent.selectOptions(column, ['population'])
+  userEvent.click(condition)
+  userEvent.click(buttonSort)
+
+  const coruscant = await screen.findByText('Coruscant')
+  expect(coruscant).toBeInTheDocument()
+})
